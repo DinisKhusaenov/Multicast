@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using Infrastructure.Loading.Scene;
 using UI.HUD.Windows;
 
@@ -29,16 +28,11 @@ namespace Infrastructure.States.States
         {
         }
 
-        private async void OnSceneLoaded()
-        {
-            await InitializeData();
-            
-            _applicationStateMachine.SwitchState<MenuState>();
-        }
-
-        private async UniTask InitializeData()
+        private void OnSceneLoaded()
         {
             _loadingCurtain.Show();
+            
+            _applicationStateMachine.SwitchState<MenuState>();
         }
     }
 }

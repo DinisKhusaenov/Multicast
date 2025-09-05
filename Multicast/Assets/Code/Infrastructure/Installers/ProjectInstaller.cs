@@ -1,10 +1,13 @@
 ﻿using Gameplay.Cameras;
+using Gameplay.Input;
+using Gameplay.StaticData;
 using Infrastructure.AssetManagement;
 using Infrastructure.Loading.Scene;
 using Infrastructure.Services.LogService;
 using Infrastructure.States;
 using Infrastructure.States.Factory;
 using UI.HUD.Windows;
+using UI.HUD.Windows.Factory;
 using UnityEngine;
 using Zenject;
 
@@ -20,7 +23,9 @@ namespace Infrastructure.Installers
             BindApplicationStateMachine();
             BindServices();
             BindCameraProvider();
+            BindInputService();
             BindGameplayServices();
+            BindUI();
             BindLoadingCurtain();
             BindFactory();
         }
@@ -33,6 +38,11 @@ namespace Infrastructure.Installers
         private void BindLoadingCurtain()
         {
             Container.BindInterfacesAndSelfTo<LoadingCurtain>().FromComponentInNewPrefab(_loadingCurtain).AsSingle();
+        }
+
+        private void BindUI()
+        {
+            Container.Bind<IWindowFactory>().To<WindowFactory>().AsSingle();
         }
 
         private void BindServices()
@@ -55,8 +65,14 @@ namespace Infrastructure.Installers
             Container.Bind<ICameraProvider>().To<CameraProvider>().AsSingle();
         }
         
+        private void BindInputService()
+        {
+            Container.Bind<IInputService>().To<StandaloneInputService>().AsSingle();
+        }
+        
         private void BindGameplayServices()
         {
+            Container.Bind<IStaticDataService>().To<StaticDataService>().AsSingle();
             Container.Bind<IAssetProvider>().To<AssetProvider>().AsSingle();
         }
     }

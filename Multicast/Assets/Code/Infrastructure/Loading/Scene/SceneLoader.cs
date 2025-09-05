@@ -20,7 +20,8 @@ namespace Infrastructure.Loading.Scene
 
         public async UniTask LoadScene(string name, Action onLoaded = null)
         {
-            if (SceneManager.GetActiveScene().name == name)
+            if (SceneManager.GetActiveScene().name == name
+                && name != SceneNames.Initialize)
             {
                 _logService.Log($"Reloading the scene {name}");
                 onLoaded?.Invoke();
