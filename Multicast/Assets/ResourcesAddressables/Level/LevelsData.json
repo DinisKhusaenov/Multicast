@@ -2,7 +2,23 @@
   "Levels": [
     {
       "CurrentLevel": 0,
+      "WordsLength": 6,
       "Words": ["МОЛОКО", "ПАЛЬТО", "ЛОПАТА", "РЮКЗАК"]
+    },
+    {
+      "CurrentLevel": 1,
+      "WordsLength": 6,
+      "Words": ["БАННЕР", "ЛЕСНИК", "МОНЕТА", "ВОКЗАЛ"]
+    },
+    {
+      "CurrentLevel": 2,
+      "WordsLength": 6,
+      "Words": ["БЕРЕЗА", "КУПЛЕТ", "ГИТАРА", "КОРОВА"]
+    },
+    {
+      "CurrentLevel": 3,
+      "WordsLength": 6,
+      "Words": ["РОМАНС", "ГВОЗДЬ", "ЗВЕРЕК", "КАРМАН"]
     }
   ]
 }

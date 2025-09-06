@@ -3,6 +3,7 @@ using Gameplay.Input;
 using Gameplay.StaticData;
 using Infrastructure.AssetManagement;
 using Infrastructure.Loading.Scene;
+using Infrastructure.SaveLoad;
 using Infrastructure.Services.LogService;
 using Infrastructure.States;
 using Infrastructure.States.Factory;
@@ -28,6 +29,7 @@ namespace Infrastructure.Installers
             BindUI();
             BindLoadingCurtain();
             BindFactory();
+            BindData();
         }
 
         private void BindFactory()
@@ -74,6 +76,18 @@ namespace Infrastructure.Installers
         {
             Container.Bind<IStaticDataService>().To<StaticDataService>().AsSingle();
             Container.Bind<IAssetProvider>().To<AssetProvider>().AsSingle();
+        }
+
+        private void BindData()
+        {
+            var persistentData = new PersistentData();
+            var dataProvider = new DataLocalProvider(persistentData);
+            
+            if (dataProvider.TryLoad() == false)
+                persistentData.GameData = new GameData();
+            
+            Container.BindInterfacesAndSelfTo<PersistentData>().FromInstance(persistentData).AsSingle();
+            Container.BindInterfacesAndSelfTo<DataLocalProvider>().FromInstance(dataProvider).AsSingle();
         }
     }
 }

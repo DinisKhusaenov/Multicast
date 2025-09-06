@@ -8,13 +8,15 @@ namespace UI.Menu
     public class GameMenuView : MonoBehaviour, IGameMenuView
     {
         public event Action StartClicked;
+
+        private const string Level = "Уровень";
         
         [SerializeField] private Button _startButton;
         [SerializeField] private TMP_Text _level;
 
         public void SetLevel(int level)
         {
-            _level.SetText(level.ToString());
+            _level.SetText($"{Level}: {level}");
         }
 
         private void OnEnable()

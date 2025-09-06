@@ -7,6 +7,7 @@ namespace GameLogic.Gameplay.GameLogic
     public class Level
     {
         public int CurrentLevel;
+        public int WordsLength;
         public List<string> Words;
     }
 }

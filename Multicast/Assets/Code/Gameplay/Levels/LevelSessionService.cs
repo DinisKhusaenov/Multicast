@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using GameLogic.Gameplay.GameLogic;
 using Gameplay.Clusters;
@@ -8,6 +9,7 @@ using Gameplay.Clusters.Placer;
 using Gameplay.StaticData;
 using Infrastructure.AssetManagement;
 using Infrastructure.Loading.Level;
+using Infrastructure.SaveLoad;
 using Infrastructure.StateMachine;
 using Infrastructure.States.States;
 using UI.HUD.Service;
@@ -28,6 +30,8 @@ namespace Gameplay.Levels
         private readonly ILevelCompletionChecker _levelCompletionChecker;
         private readonly IAssetProvider _assetProvider;
         private readonly IStateSwitcher _stateSwitcher;
+        private readonly IPersistentData _persistentData;
+        private readonly IDataProvider _dataProvider;
 
         private readonly List<IClusterContainer> _containers = new();
         private readonly List<ICluster> _clusters = new();
@@ -38,7 +42,7 @@ namespace Gameplay.Levels
         private Transform _wordsParent;
         private Transform _moveParent;
         private LevelsData _levelsData;
-        private int _currentLevel;
+        private Level _currentLevel;
 
         public LevelSessionService(
             IClustersContainerFactory clustersContainerFactory, 
@@ -50,7 +54,9 @@ namespace Gameplay.Levels
             ILoadingCurtain loadingCurtain,
             ILevelCompletionChecker levelCompletionChecker,
             IAssetProvider assetProvider,
-            IStateSwitcher stateSwitcher)
+            IStateSwitcher stateSwitcher,
+            IPersistentData persistentData,
+            IDataProvider dataProvider)
         {
             _clustersContainerFactory = clustersContainerFactory;
             _clusterFactory = clusterFactory;
@@ -62,6 +68,8 @@ namespace Gameplay.Levels
             _levelCompletionChecker = levelCompletionChecker;
             _assetProvider = assetProvider;
             _stateSwitcher = stateSwitcher;
+            _persistentData = persistentData;
+            _dataProvider = dataProvider;
 
             _hudService.OnQuitClicked += GoToMenu;
         }
@@ -116,15 +124,20 @@ namespace Gameplay.Levels
         public void PrepareNextLevel()
         {
             CleanUp();
-            _currentLevel++;
-
-            if (_currentLevel >= _levelsData.Levels.Count)
-                _currentLevel = 0;
+            UpdateLevelData();
         }
 
         private async UniTask LoadLevels()
         {
             _levelsData ??= await _levelDataLoader.LoadDataAsync();
+            UpdateLevelData();
+        }
+
+        private void UpdateLevelData()
+        {
+            _currentLevel = _levelsData.Levels.FirstOrDefault(x => x.CurrentLevel == _persistentData.GameData.Level);
+            if (_currentLevel == null)
+                throw new Exception($"Level {_persistentData.GameData.Level} does not exist");
         }
 
         private async UniTask CreateContainers()
@@ -138,7 +151,7 @@ namespace Gameplay.Levels
 
         private void CreateClusters()
         {
-            List<string> clusterTexts = _clustersGenerator.GetClusterBy(_levelsData.Levels[_currentLevel]);
+            List<string> clusterTexts = _clustersGenerator.GetClusterBy(_currentLevel);
             foreach (string clusterText in clusterTexts)
             {
                 ICluster cluster = _clusterFactory.CreateCluster(_clustersInitialContainer.Container, clusterText);
@@ -148,8 +161,13 @@ namespace Gameplay.Levels
 
         private void CheckLevelOnComplete()
         {
-            if (_levelCompletionChecker.IsCompleted(_containers, _levelsData.Levels[_currentLevel]))
+            if (_levelCompletionChecker.IsCompleted(_containers, _currentLevel))
             {
+                _persistentData.GameData.Level++;
+                if (_persistentData.GameData.Level >= _levelsData.Levels.Count)
+                    _persistentData.GameData.Level = 0;
+                
+                _dataProvider.Save();
                 _hudService.ShowGameOverView().Forget();
             }
         }
@@ -157,7 +175,7 @@ namespace Gameplay.Levels
         private int GetWordsCount()
         {
             return Math.Min(
-                _levelsData.Levels[_currentLevel].Words.Count,
+                _currentLevel.Words.Count,
                 _staticDataService.LevelConfig.WordsCount);
         }
 
