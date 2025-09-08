@@ -7,5 +7,7 @@
     ClustersContainer = 2,
     GameOverView = 3,
     ClustersConfig = 4,
+    LevelConfig = 5,
+    LevelCompletionConfig = 6,
   }
 }

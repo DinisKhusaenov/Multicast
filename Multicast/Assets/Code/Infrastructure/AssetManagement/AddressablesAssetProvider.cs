@@ -6,11 +6,11 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace Infrastructure.AssetManagement
 {
-    public class AssetProvider : IAssetProvider
+    public class AddressablesAssetProvider : IAssetProvider
     {
         private readonly Dictionary<AssetPathType, AsyncOperationHandle> _loadedAssets = new();
         
-        public async UniTask<T> Load<T>(AssetPathType key)
+        public async UniTask<T> Load<T>(AssetPathType key) where T : UnityEngine.Object
         {
             if (key == AssetPathType.Unknown)
                 throw new ArgumentException($"Path type {key} is invalid");

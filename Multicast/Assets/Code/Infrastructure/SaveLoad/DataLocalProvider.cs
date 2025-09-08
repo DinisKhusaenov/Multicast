@@ -8,29 +8,21 @@ namespace Infrastructure.SaveLoad
     {
         private const string FileName = "GameSave";
         private const string SaveFileExtension = ".json";
-
-        private IPersistentData _persistentData;
-
-        public DataLocalProvider(IPersistentData persistentData)
-        {
-            _persistentData = persistentData;
-        }
         
         private string SavePath => Application.persistentDataPath;
         private string FullPath => Path.Combine(SavePath, $"{FileName}{SaveFileExtension}");
         
-        public void Save()
+        public void Save<T>(T data) where T : ISaveData
         {
-            File.WriteAllText(FullPath, _persistentData.GameData.ToJson());
+            File.WriteAllText(FullPath, data.ToJson());
         }
 
-        public bool TryLoad()
+        public T Load<T>() where T : ISaveData, new()
         {
             if (IsDataAlreadyExist() == false)
-                return false;
+                return new T();
 
-            _persistentData.GameData = File.ReadAllText(FullPath).FromJson<GameData>();
-            return true;
+            return File.ReadAllText(FullPath).FromJson<T>();
         }
 
         private bool IsDataAlreadyExist() => File.Exists(FullPath);

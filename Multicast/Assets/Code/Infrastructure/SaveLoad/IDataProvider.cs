@@ -2,7 +2,7 @@ namespace Infrastructure.SaveLoad
 {
     public interface IDataProvider
     {
-        void Save();
-        bool TryLoad();
+        void Save<T>(T data) where T : ISaveData;
+        T Load<T>() where T : ISaveData, new();
     }
 }

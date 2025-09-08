@@ -1,33 +1,34 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using GameLogic.Gameplay.GameLogic;
 using Gameplay.Clusters;
 using Gameplay.Levels.Configs;
-using Gameplay.StaticData;
+using Infrastructure.AssetManagement;
 using Infrastructure.SaveLoad;
 
 namespace Gameplay.Levels.LevelCompletion
 {
     public class LevelCompletionService : ILevelCompletionService
     {
-        private readonly IStaticDataService _staticDataService;
         private readonly IPersistentData _persistentData;
+        private readonly IAssetProvider _assetProvider;
 
         private List<ILevelCompletionChecker> _levelCompletionCheckers = new();
         private IReadOnlyList<IClusterContainer> _containers;
         private Level _level;
 
-        public LevelCompletionService(IStaticDataService staticDataService, IPersistentData persistentData)
+        public LevelCompletionService(IPersistentData persistentData, IAssetProvider assetProvider)
         {
-            _staticDataService = staticDataService;
             _persistentData = persistentData;
+            _assetProvider = assetProvider;
         }
 
         public void Initialize(IReadOnlyList<IClusterContainer> clustersContainers, Level level)
         {
             _level = level;
             _containers = clustersContainers;
-            AddCompletionCheckers();
+            AddCompletionCheckers().Forget();
         }
 
         public bool IsLevelCompleted()
@@ -40,9 +41,10 @@ namespace Gameplay.Levels.LevelCompletion
             return false;
         }
         
-        private void AddCompletionCheckers()
+        private async UniTask AddCompletionCheckers()
         {
-            foreach (LevelCompletionType type in _staticDataService.GetData<LevelCompletionConfig>().CompletionTypes)
+            var config = await _assetProvider.Load<LevelCompletionConfig>(AssetPathType.LevelCompletionConfig);
+            foreach (LevelCompletionType type in config.CompletionTypes)
             {
                 switch (type)
                 {

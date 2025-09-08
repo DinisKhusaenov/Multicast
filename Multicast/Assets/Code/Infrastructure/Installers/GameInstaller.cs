@@ -1,5 +1,7 @@
-﻿using Gameplay.Clusters.Factory;
+﻿using Code.Gameplay.SceneBuilder;
+using Gameplay.Clusters.Factory;
 using Gameplay.Levels;
+using Gameplay.Levels.LevelCompletion;
 using Infrastructure.Loading.Level;
 using UI.HUD.Service;
 using Zenject;
@@ -25,6 +27,8 @@ namespace Infrastructure.Installers
             Container.Bind<ILevelDataLoader>().To<LevelDataLoader>().AsSingle();
             Container.Bind<ILevelSessionService>().To<LevelSessionService>().AsSingle();
             Container.Bind<ILevelCleanUpService>().To<LevelCleanUpService>().AsSingle();
+            Container.Bind<ILevelCompletionService>().To<LevelCompletionService>().AsSingle();
+            Container.Bind<ISceneBuilder>().To<SceneBuilder>().AsSingle();
         }
 
         private void BindFactories()

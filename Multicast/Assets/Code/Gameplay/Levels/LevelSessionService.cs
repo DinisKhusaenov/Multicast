@@ -19,7 +19,6 @@ namespace Gameplay.Levels
 {
     public class LevelSessionService : ILevelSessionService, IDisposable
     {
-        private readonly ILevelDataLoader _levelDataLoader;
         private readonly IHUDService _hudService;
         private readonly ILoadingCurtain _loadingCurtain;
         private readonly IAssetProvider _assetProvider;
@@ -28,6 +27,7 @@ namespace Gameplay.Levels
         private readonly IDataProvider _dataProvider;
         private readonly ILevelCompletionService _levelCompletionService;
         private readonly ISceneBuilder _sceneBuilder;
+        private readonly ILevelDataLoader _levelDataLoader;
 
         private IClusterPlacer _clusterPlacer;
         private IClustersInitialContainer _clustersInitialContainer;
@@ -37,15 +37,15 @@ namespace Gameplay.Levels
         private Transform _wordsParent;
 
         public LevelSessionService(
-            ILevelDataLoader levelDataLoader,
             IHUDService hudService,
             ILoadingCurtain loadingCurtain,
             IAssetProvider assetProvider,
             IStateSwitcher stateSwitcher,
             IPersistentData persistentData,
-            IDataProvider dataProvider, ISceneBuilder sceneBuilder)
+            IDataProvider dataProvider, 
+            ISceneBuilder sceneBuilder,
+            ILevelDataLoader levelDataLoader)
         {
-            _levelDataLoader = levelDataLoader;
             _hudService = hudService;
             _loadingCurtain = loadingCurtain;
             _assetProvider = assetProvider;
@@ -53,8 +53,7 @@ namespace Gameplay.Levels
             _persistentData = persistentData;
             _dataProvider = dataProvider;
             _sceneBuilder = sceneBuilder;
-
-            _hudService.OnQuitClicked += GoToMenu;
+            _levelDataLoader = levelDataLoader;
         }
 
         public void SetUp(IClustersInitialContainer clustersInitialContainer, Transform wordsParent, Transform moveParent)
@@ -64,6 +63,7 @@ namespace Gameplay.Levels
             _clustersInitialContainer = clustersInitialContainer;
             
             _sceneBuilder.Initialize(_wordsParent, _clustersInitialContainer);
+            _hudService.OnQuitClicked += GoToMenu;
         }
 
         public async UniTask Run()
@@ -79,6 +79,12 @@ namespace Gameplay.Levels
             
             _loadingCurtain.Hide();
         }
+        
+        public void PrepareNextLevel()
+        {
+            CleanUp();
+            UpdateLevelData();
+        }
 
         public void CleanUp()
         {
@@ -86,12 +92,6 @@ namespace Gameplay.Levels
             _clusterPlacer.Dispose();
             _sceneBuilder.CleanUp();
             _clusterPlacer = null;
-        }
-
-        public void PrepareNextLevel()
-        {
-            CleanUp();
-            UpdateLevelData();
         }
         
         public void Dispose()
@@ -119,7 +119,7 @@ namespace Gameplay.Levels
                 if (_persistentData.GameData.Level >= _levelsData.Levels.Count)
                     _persistentData.GameData.Level = 0;
                 
-                _dataProvider.Save();
+                _dataProvider.Save(_persistentData.GameData);
                 _hudService.ShowGameOverView().Forget();
             }
         }

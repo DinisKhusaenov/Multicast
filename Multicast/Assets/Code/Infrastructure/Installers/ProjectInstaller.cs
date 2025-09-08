@@ -1,6 +1,5 @@
 ﻿using Gameplay.Cameras;
 using Gameplay.Input;
-using Gameplay.StaticData;
 using Infrastructure.AssetManagement;
 using Infrastructure.Loading.Scene;
 using Infrastructure.SaveLoad;
@@ -74,20 +73,17 @@ namespace Infrastructure.Installers
         
         private void BindGameplayServices()
         {
-            Container.Bind<IStaticDataService>().To<StaticDataService>().AsSingle();
-            Container.Bind<IAssetProvider>().To<AssetProvider>().AsSingle();
+            var provider = new CompositeAssetProvider(
+                new AddressablesAssetProvider(),
+                new ResourcesAssetProvider());
+            
+            Container.Bind<IAssetProvider>().To<CompositeAssetProvider>().FromInstance(provider).AsSingle();
         }
 
         private void BindData()
         {
-            var persistentData = new PersistentData();
-            var dataProvider = new DataLocalProvider(persistentData);
-            
-            if (dataProvider.TryLoad() == false)
-                persistentData.GameData = new GameData();
-            
-            Container.BindInterfacesAndSelfTo<PersistentData>().FromInstance(persistentData).AsSingle();
-            Container.BindInterfacesAndSelfTo<DataLocalProvider>().FromInstance(dataProvider).AsSingle();
+            Container.BindInterfacesAndSelfTo<PersistentData>().AsSingle();
+            Container.BindInterfacesAndSelfTo<DataLocalProvider>().AsSingle();
         }
     }
 }
