@@ -24,7 +24,6 @@ namespace Infrastructure.Installers
         {
             Container.Bind<ILevelDataLoader>().To<LevelDataLoader>().AsSingle();
             Container.Bind<ILevelSessionService>().To<LevelSessionService>().AsSingle();
-            Container.Bind<ILevelCompletionChecker>().To<LevelCompletionChecker>().AsSingle();
             Container.Bind<ILevelCleanUpService>().To<LevelCleanUpService>().AsSingle();
         }
 

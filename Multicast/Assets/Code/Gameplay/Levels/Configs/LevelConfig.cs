@@ -1,9 +1,10 @@
+using Gameplay.StaticData;
 using UnityEngine;
 
 namespace Gameplay.Levels.Configs
 {
     [CreateAssetMenu(menuName = "Configs/LevelConfig", fileName = "LevelConfig")]
-    public class LevelConfig : ScriptableObject
+    public class LevelConfig : ScriptableObject, IStaticData
     {
         [field: SerializeField, Range(0, 10)] public int MinClusterLength { get; private set; }
         [field: SerializeField, Range(0, 10)] public int MaxClusterLength { get; private set; }

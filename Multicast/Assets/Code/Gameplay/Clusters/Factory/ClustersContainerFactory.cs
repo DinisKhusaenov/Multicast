@@ -18,7 +18,7 @@ namespace Gameplay.Clusters.Factory
 
         public async UniTask<IClusterContainer> CreateClustersContainer(Transform parent)
         {
-            GameObject prefab = await _assetProvider.Load<GameObject>(AssetPath.ClustersContainer);
+            GameObject prefab = await _assetProvider.Load<GameObject>(AssetPathType.ClustersContainer);
             var cluster = _instantiator.InstantiatePrefab(prefab, parent);
 
             return cluster.GetComponent<IClusterContainer>();

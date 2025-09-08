@@ -18,7 +18,7 @@ namespace UI.HUD.Windows.Factory
 
         public async UniTask<IGameOverView> CreateGameOverView(Canvas canvas)
         {
-            GameObject prefab = await _assetProvider.Load<GameObject>(AssetPath.GameOverView);
+            GameObject prefab = await _assetProvider.Load<GameObject>(AssetPathType.GameOverView);
             var view = _instantiator.InstantiatePrefab(prefab, canvas.transform);
             view.SetActive(false);
             

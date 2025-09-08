@@ -1,10 +1,11 @@
 using System;
+using Gameplay.StaticData;
 using UnityEngine;
 
 namespace Gameplay.Clusters.Config
 {
     [CreateAssetMenu(menuName = "Configs/ClustersConfig", fileName = "ClustersConfig")]
-    public class ClustersConfig : ScriptableObject
+    public class ClustersConfig : ScriptableObject, IStaticData
     {
         [SerializeField] private Cluster[] _clustersPrefab;
 

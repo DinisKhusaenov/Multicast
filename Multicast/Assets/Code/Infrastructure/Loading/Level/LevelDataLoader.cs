@@ -17,7 +17,7 @@ namespace Infrastructure.Loading.Level
 
         public async UniTask<LevelsData> LoadDataAsync()
         {
-            TextAsset levelsText = await _assetProvider.Load<TextAsset>(AssetPath.Levels);
+            TextAsset levelsText = await _assetProvider.Load<TextAsset>(AssetPathType.LevelsData);
             var data = JsonSerialization.FromJson<LevelsData>(levelsText.text);
 
             return data;

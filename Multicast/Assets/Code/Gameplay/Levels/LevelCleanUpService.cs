@@ -27,8 +27,8 @@ namespace Gameplay.Levels
                 Object.Destroy(_containers[i].gameObject);
             }
 
-            _clusters = null;
-            _containers = null;
+            _clusters.Clear();
+            _containers.Clear();
         }
     }
 }
