@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 
 namespace Infrastructure.AssetManagement
 {
-    public class ResourcesAssetProvider : IAssetProvider
+    public class ResourcesAssetProvider : ILeafAssetProvider
     {
         private readonly Dictionary<AssetPathType, Object> _cache = new();
 
@@ -22,11 +22,9 @@ namespace Infrastructure.AssetManagement
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentException($"No Resources path mapped for {key}");
 
-            var request = Resources.LoadAsync<T>(path);
-            var asset = await request.ToUniTask();
-
+            var asset = await Resources.LoadAsync(path).ToUniTask();
             if (asset == null)
-                throw new Exception($"Resources.LoadAsync<{typeof(T).Name}> failed by path '{path}'");
+                throw new Exception($"Resources load failed by path '{path}'");
 
             _cache[key] = asset;
             return (T)asset;

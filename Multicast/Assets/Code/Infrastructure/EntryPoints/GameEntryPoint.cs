@@ -25,11 +25,11 @@ namespace Infrastructure.EntryPoints
             _levelSessionService = levelSessionService;
         }
 
-        private void Start()
+        private async void Start()
         {
-            _levelSessionService.SetUp(_clusterParent, _wordsParent, _moveClusterParent);
             _hudService.Initialize(_levelSessionService, _hudCanvas, _quitButton);
-            _levelSessionService.Run();
+            await _levelSessionService.SetUp(_clusterParent, _wordsParent, _moveClusterParent);
+            await _levelSessionService.Run();
         }
     }
 }

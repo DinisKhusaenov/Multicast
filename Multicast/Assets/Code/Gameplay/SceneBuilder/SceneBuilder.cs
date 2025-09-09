@@ -38,7 +38,7 @@ namespace Code.Gameplay.SceneBuilder
             _assetProvider = assetProvider;
         }
 
-        public async void Initialize(Transform wordsParent, IClustersInitialContainer clustersInitialContainer)
+        public async UniTask InitializeAsync(Transform wordsParent, IClustersInitialContainer clustersInitialContainer)
         {
             _clustersInitialContainer = clustersInitialContainer;
             _wordsParent = wordsParent;

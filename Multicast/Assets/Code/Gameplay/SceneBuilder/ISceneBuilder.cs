@@ -10,7 +10,7 @@ namespace Code.Gameplay.SceneBuilder
     {
         List<IClusterContainer> Containers { get; }
         List<ICluster> Clusters { get; }
-        void Initialize(Transform wordsParent, IClustersInitialContainer clustersInitialContainer);
+        UniTask InitializeAsync(Transform wordsParent, IClustersInitialContainer clustersInitialContainer);
         UniTask Build(Level level);
         void CleanUp();
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Code.Gameplay.SceneBuilder;
 using Cysharp.Threading.Tasks;
 using Gameplay.Clusters;
 using Gameplay.Levels;
@@ -15,17 +16,17 @@ namespace UI.HUD.Service
         public event Action OnQuitClicked;
         
         private readonly IWindowFactory _windowFactory;
+        private readonly ISceneBuilder _sceneBuilder;
         private ILevelSessionService _levelSessionService;
         
         private Button _quitButton;
-        private IReadOnlyList<IClusterContainer> _containers;
         private Canvas _canvas;
         private IGameOverView _gameOverView;
 
-        public HUDService( 
-            IWindowFactory windowFactory)
+        public HUDService(IWindowFactory windowFactory, ISceneBuilder sceneBuilder)
         {
             _windowFactory = windowFactory;
+            _sceneBuilder = sceneBuilder;
         }
 
         public void Initialize(ILevelSessionService levelSessionService, Canvas canvas, Button quitButton)
@@ -35,11 +36,6 @@ namespace UI.HUD.Service
             _quitButton = quitButton;
             
             _quitButton.onClick.AddListener(LeaveToMenu);
-        }
-
-        public void InitializeByLevel(IReadOnlyList<IClusterContainer> containers)
-        {
-            _containers = containers;
         }
 
         public void Dispose()
@@ -66,7 +62,7 @@ namespace UI.HUD.Service
         {
             List<string> words = new();
 
-            foreach (IClusterContainer container in _containers)
+            foreach (IClusterContainer container in _sceneBuilder.Containers)
             {
                 words.Add(container.GetWordFromClusters());
             }

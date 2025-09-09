@@ -6,7 +6,7 @@ namespace Gameplay.Levels
 {
     public interface ILevelSessionService
     {
-        void SetUp(IClustersInitialContainer clustersInitialContainer, Transform wordsParent, Transform moveParent);
+        UniTask SetUp(IClustersInitialContainer clustersInitialContainer, Transform wordsParent, Transform moveParent);
         UniTask Run();
         void CleanUp();
         void PrepareNextLevel();

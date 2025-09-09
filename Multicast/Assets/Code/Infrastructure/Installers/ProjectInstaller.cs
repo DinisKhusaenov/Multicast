@@ -73,11 +73,10 @@ namespace Infrastructure.Installers
         
         private void BindGameplayServices()
         {
-            var provider = new CompositeAssetProvider(
-                new AddressablesAssetProvider(),
-                new ResourcesAssetProvider());
-            
-            Container.Bind<IAssetProvider>().To<CompositeAssetProvider>().FromInstance(provider).AsSingle();
+            Container.Bind<ILeafAssetProvider>().To<AddressablesAssetProvider>().AsSingle();
+            Container.Bind<ILeafAssetProvider>().To<ResourcesAssetProvider>().AsSingle();
+
+            Container.Bind<IAssetProvider>().To<CompositeAssetProvider>().AsSingle();
         }
 
         private void BindData()

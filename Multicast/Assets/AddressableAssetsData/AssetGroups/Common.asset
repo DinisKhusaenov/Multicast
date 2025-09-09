@@ -13,10 +13,38 @@ MonoBehaviour:
   m_Name: Common
   m_EditorClassIdentifier: 
   m_GroupName: Common
-  m_Data:
-    m_SerializedData: []
   m_GUID: 407afad97f183d44eb5594997f8f9258
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 4aecb92fff08436c8303b10eab8da368
+    m_Address: Style Sheets
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 512a49d95c0c4332bdd98131869c23c9
+    m_Address: Sprite Assets
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6ab70aee4d56447429c680537fbf93ed
+    m_Address: Assets/ResourcesAddressables/Common/UI/TextMeshPro/Fonts
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 731f1baa9d144a9897cb1d341c2092b8
+    m_Address: Fonts & Materials
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d0603b6d5186471b96c778c3949c7ce2
+    m_Address: Assets/ResourcesAddressables/Common/UI/TextMeshPro/Sprites
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9f693669af91aa45ad615fc681ed29f
+    m_Address: Assets/ResourcesAddressables/Common/UI/TextMeshPro/Shaders
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 38def4c0d12ebf549a44889146144441, type: 2}
   m_SchemaSet:

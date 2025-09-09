@@ -26,7 +26,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3cc6ac5e790802047b7b4bca933fa720
-    m_Address: Configs/Cluster/ClustersConfig
+    m_Address: ClustersConfig
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

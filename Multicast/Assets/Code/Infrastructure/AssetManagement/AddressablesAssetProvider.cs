@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceLocations;
 
 namespace Infrastructure.AssetManagement
 {
-    public class AddressablesAssetProvider : IAssetProvider
+    public class AddressablesAssetProvider : ILeafAssetProvider
     {
         private readonly Dictionary<AssetPathType, AsyncOperationHandle> _loadedAssets = new();
         
@@ -19,6 +20,20 @@ namespace Infrastructure.AssetManagement
             {
                 return (T)handle.Result;
             }
+            
+            var locHandle = Addressables.LoadResourceLocationsAsync(key.ToString(), typeof(T));
+            IList<IResourceLocation> locs;
+            try
+            {
+                locs = await locHandle.ToUniTask();
+            }
+            finally
+            {
+                if (locHandle.IsValid()) Addressables.Release(locHandle);
+            }
+
+            if (locs == null || locs.Count == 0)
+                throw new Exception($"[Addressables] '{key.ToString()}' not found for {typeof(T).Name}");
 
             var operationHandle = Addressables.LoadAssetAsync<T>(key.ToString());
             _loadedAssets[key] = operationHandle;

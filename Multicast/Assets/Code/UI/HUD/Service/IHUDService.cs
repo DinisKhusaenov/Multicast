@@ -12,7 +12,6 @@ namespace UI.HUD.Service
     public interface IHUDService : IDisposable
     {
         void Initialize(ILevelSessionService levelSessionService, Canvas canvas, Button quitButton);
-        void InitializeByLevel(IReadOnlyList<IClusterContainer> containers);
         UniTask ShowGameOverView();
         event Action OnQuitClicked;
     }

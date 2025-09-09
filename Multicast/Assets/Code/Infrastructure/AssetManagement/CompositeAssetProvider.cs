@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Infrastructure.Services.LogService;
 using Zenject;
@@ -9,12 +10,10 @@ namespace Infrastructure.AssetManagement
     public class CompositeAssetProvider : IAssetProvider
     {
         [Inject] private ILogService _logService;
-        private List<IAssetProvider> _providers = new();
+        private List<ILeafAssetProvider> _providers = new();
 
-        public CompositeAssetProvider(params IAssetProvider[] providers)
-        {
-            _providers.AddRange(providers);
-        }
+        public CompositeAssetProvider(IEnumerable<ILeafAssetProvider> providers)
+            => _providers = providers.ToList();
         
         public async UniTask<T> Load<T>(AssetPathType key) where T : UnityEngine.Object
         {

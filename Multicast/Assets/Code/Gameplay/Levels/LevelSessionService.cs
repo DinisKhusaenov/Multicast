@@ -44,7 +44,8 @@ namespace Gameplay.Levels
             IPersistentData persistentData,
             IDataProvider dataProvider, 
             ISceneBuilder sceneBuilder,
-            ILevelDataLoader levelDataLoader)
+            ILevelDataLoader levelDataLoader,
+            ILevelCompletionService levelCompletionService)
         {
             _hudService = hudService;
             _loadingCurtain = loadingCurtain;
@@ -54,15 +55,16 @@ namespace Gameplay.Levels
             _dataProvider = dataProvider;
             _sceneBuilder = sceneBuilder;
             _levelDataLoader = levelDataLoader;
+            _levelCompletionService = levelCompletionService;
         }
 
-        public void SetUp(IClustersInitialContainer clustersInitialContainer, Transform wordsParent, Transform moveParent)
+        public async UniTask SetUp(IClustersInitialContainer clustersInitialContainer, Transform wordsParent, Transform moveParent)
         {
             _wordsParent = wordsParent;
             _moveParent = moveParent;
             _clustersInitialContainer = clustersInitialContainer;
             
-            _sceneBuilder.Initialize(_wordsParent, _clustersInitialContainer);
+            await _sceneBuilder.InitializeAsync(_wordsParent, _clustersInitialContainer);
             _hudService.OnQuitClicked += GoToMenu;
         }
 
@@ -71,12 +73,11 @@ namespace Gameplay.Levels
             _loadingCurtain.Show();
             
             await LoadLevels();
-            _sceneBuilder.Build(_currentLevel);
+            await _sceneBuilder.Build(_currentLevel);
             _clusterPlacer = new ClusterPlacer(_moveParent, _clustersInitialContainer, _sceneBuilder.Containers, _sceneBuilder.Clusters);
             _levelCompletionService.Initialize(_sceneBuilder.Containers, _currentLevel);
-            _hudService.InitializeByLevel(_sceneBuilder.Containers);
-            _clusterPlacer.OnClusterPlaced += CheckLevelOnComplete;
             
+            _clusterPlacer.OnClusterPlaced += CheckLevelOnComplete;
             _loadingCurtain.Hide();
         }
         
