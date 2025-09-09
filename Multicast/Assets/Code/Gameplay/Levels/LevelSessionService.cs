@@ -70,8 +70,6 @@ namespace Gameplay.Levels
 
         public async UniTask Run()
         {
-            _loadingCurtain.Show();
-            
             await LoadLevels();
             await _sceneBuilder.Build(_currentLevel);
             _clusterPlacer = new ClusterPlacer(_moveParent, _clustersInitialContainer, _sceneBuilder.Containers, _sceneBuilder.Clusters);

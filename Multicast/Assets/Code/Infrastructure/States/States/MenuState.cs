@@ -21,6 +21,7 @@ namespace Infrastructure.States.States
 
         public void Enter()
         {
+            _loadingCurtain.Show();
             _sceneLoadService.LoadScene(SceneNames.Menu, OnSceneLoaded);
         }
 
