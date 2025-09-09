@@ -25,11 +25,11 @@ namespace Gameplay.Levels.LevelCompletion
             {
                 if (!_level.Words.Contains(clusterContainer.GetWordFromClusters()))
                 {
-                    _persistentData.GameData.Level++;
                     return false;
                 }
             }
-
+            
+            _persistentData.GameData.Level++;
             return true;
         }
     }
